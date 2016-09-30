@@ -3,6 +3,8 @@ class SignController < ApplicationController
 	def sign
 
 		@expires = 10.hours.from_now.utc.iso8601
+		puts "AWS_ACCESS_KEY_ID: #{ENV['AWS_ACCESS_KEY_ID']}"
+		puts "AWS_SECRET_KEY_ID: #{ENV['AWS_SECRET_ACCESS_KEY']}"
 		render json: {
 			acl: 'public-read',
 			#awsaccesskeyid: @aws_access_key_id,
@@ -39,6 +41,7 @@ class SignController < ApplicationController
 					{ success_action_status: '201'},
 					[ 'starts-with', '$key', ''], 
 					[ 'starts-with', '$Content-Type', ''],
+					[ 'starts-with', '$Cache-Control', ''],
 					[ 'content-length-range', 0, 524288000]
        
 				]
