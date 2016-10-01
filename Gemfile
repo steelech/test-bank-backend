@@ -5,7 +5,7 @@ gem 'rack-cors'
 gem 'rails', '4.2.7.1'
 gem 'combine_pdf'
 gem 'rails-api'
-
+gem 'aws-sdk'
 gem 'spring', :group => :development
 
 gem 'active_model_serializers', github: 'rails-api/active_model_serializers' 
