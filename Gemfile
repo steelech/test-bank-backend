@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'rack-cors'
 gem 'rails', '4.2.7.1'
-
+gem 'combine_pdf'
 gem 'rails-api'
 
 gem 'spring', :group => :development
