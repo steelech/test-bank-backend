@@ -19,5 +19,6 @@ class UploadsController < ApplicationController
 		'test-bank-assets', 'combined', { client: s3 })
 
 		s3Object.upload_file("#{Rails.root}/tmp/uploads/combined.pdf")
+		# todo: delete tmp/uploads folder after upload, refactor this 
 	end
 end
