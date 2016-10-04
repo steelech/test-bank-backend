@@ -1,8 +1,9 @@
 class UploadsController < ApplicationController
 	def create
 		# combine the pdfs into one file and store in /tmp
+		puts "params: #{params}"
 		pdf = CombinePDF.new
-		params['file'].each do |key, file|
+		params['files'].each do |file|
 			pdf << CombinePDF.new(file.tempfile.path)
 		end
 		folder = File.join(Rails.root, "tmp", "uploads")
