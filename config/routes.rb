@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :api_keys, except: [:new, :edit]
+  resources :users, except: [:new, :edit]
   resources :users, except: [:new, :edit]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -6,6 +8,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
   post 'uploads', to: 'uploads#create'
+  ;post 'session' => 'session#create'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

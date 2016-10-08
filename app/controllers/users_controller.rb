@@ -1,61 +1,29 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
+	before_filter :ensure_authenticated_user, only: [:index]
 
-  # GET /users
-  # GET /users.json
-  def index
-	  user = User.create({username: "Charlie"})
-	  user = User.create({username: "Cameron"})
-    @users = User.all
-   
-    render json: @users
-  end
 
-  # GET /users/1
-  # GET /users/1.json
-  def show
-    render json: @user
-  end
+	# Returns the list of users.  This requires authentication.
+	def index
+		render json: User.all
+	end
 
-  # POST /users
-  # POST /users.json
-  def create
-    @user = User.new(user_params)
+	def show 
+		render json: User.find(params[:id])
+	end
 
-    if @user.save
-      render json: @user, status: :created, location: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
+	def create
+		user = User.create(user_params)
+		if user.new_record?
+			render json: { errors: user.errors.messages }, status: 422
+		else
+			render json: user.session_api_key, status: 201
+		end
+	end
 
-  # PATCH/PUT /users/1
-  # PATCH/PUT /users/1.json
-  def update
-    @user = User.find(params[:id])
+	private
 
-    if @user.update(user_params)
-      head :no_content
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /users/1
-  # DELETE /users/1.json
-  def destroy
-    @user.destroy
-
-    head :no_content
-  end
-
-  private
-
-    def set_user
-      @user = User.find(params[:id])
-    end
-
-    def user_params
-      params.require(:user).permit(:username)
-    end
+	# Strong Parameters
+	def user_params
+		params.require(:user).permit(:name, :username, :password, :password_confirmation)
+	end
 end
