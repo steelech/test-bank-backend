@@ -6,7 +6,6 @@ class SessionControllerTest < ActionController::TestCase
 		larry = User.create!(username: 'larry', email: 'larry@example.com', name: 'Larry Moulders', password: pw, password_confirmation: pw)
 		post 'create', {username_or_email: larry.username, password: pw }
 		results = JSON.parse(response.body)
-		puts results
 		assert results['data']['attributes']['access-token'] =~ /\S{32}/
 	end
 
