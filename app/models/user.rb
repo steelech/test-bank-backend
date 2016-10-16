@@ -1,12 +1,23 @@
 class User < ActiveRecord::Base
-	has_secure_password
-	has_many :api_keys
+  before_save :ensure_authentication_token	
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable, :lockable
 
-	validates :email, presence: true, uniqueness: true
-	validates :username, presence: true, uniqueness: true
-        validates :name, presence: true
+  def ensure_authentication_token
+	  if authentication_token.blank?
+		  self.authentication_token = generate_authentication_token
+	  end
+  end
 
-        def session_api_key
-		api_keys.active.session.first_or_create
-	end	
+  private
+
+  def generate_authentication_token
+	  loop do
+		  token = Devise.friendly_token
+		  break token unless User.where(authentication_token: token).first
+	  end
+  end
+
 end

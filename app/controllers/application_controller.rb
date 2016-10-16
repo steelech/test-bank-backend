@@ -1,36 +1,20 @@
 class ApplicationController < ActionController::API
-	protected
+	before_filter :authenticate_user_from_token!
 
-	# Renders a 401 status code if the user is not authenticated
-	def ensure_authenticated_user
-		head :unauthorized unless current_user
-	end
+	before_filter :authenticate_user!
+
+	private
 	
-	# Returns the active user associated with the access token if available
-	def current_user
-		api_key = ApiKey.active.where(access_token: token).first
-		if api_key
-			return api_key.user
-		else
-			return nil
-		end
-	end
+	def authenticate_user_from_token!
+		authenticate_with_http_token do |token, options|
+			user_email = options[:email].presence
+			user = user_email && User.find_by_email(user_email)
 
-
-	# Parses the access token from the header
-	def token
-		bearer = request.headers["HTTP_AUTHORIZATION"]
-
-
-		bearer ||= request.headers["rack.session"].try(:[], 'Authorization')
-
-		if bearer.present?
-			bearer.split.last
-		else
-			nil
+			if user && Devise.secure_compare(user.authentication_token, token)
+				sign_in user, store: false
+			end
 		end
 
-	end
-	
+	end	
 
 end
