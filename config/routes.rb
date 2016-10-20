@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { sessions: 'sessions' }
+  devise_for :users, controllers: { sessions: 'sessions'}, :skip => [:registrations]
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   get 'users', to: 'users#show'
+  post 'users', to: 'users#create'
   get 'sign', to: 'sign#sign'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

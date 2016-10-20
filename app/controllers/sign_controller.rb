@@ -1,4 +1,4 @@
-class SignController < ApplicationController
+class SignController < AuthenticatedController
 
 	def sign
 

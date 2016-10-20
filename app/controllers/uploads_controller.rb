@@ -1,4 +1,4 @@
-class UploadsController < ApplicationController
+class Authenticated < ApplicationController
 	def create
 		# combine the pdfs into one file and store in /tmp
 		puts "params: #{params}"
