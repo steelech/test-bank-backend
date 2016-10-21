@@ -4,7 +4,6 @@ class UsersController < ApplicationController
 		authenticate_user_from_token!
 		authenticate_user!
 		render json: current_user 
-		
 	end
 	def create
 		user = User.create(email: params[:identification], password: params[:password])
