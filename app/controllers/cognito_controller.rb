@@ -11,7 +11,6 @@ class CognitoController < ApplicationController
 			logins: {
 				"login.testbank" => "steelech@umich.edu"
 			},
-			
 		})
 
 		data = {

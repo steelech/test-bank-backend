@@ -3,15 +3,16 @@ class UploadsController < AuthenticatedController
 	respond_to :json
 	def create
 		# combine the pdfs into one file and store in /tmp
-		puts "params: #{params}"
-		pdf = CombinePDF.new
-		params['files'].each do |file|
-			pdf << CombinePDF.new(file.tempfile.path)
-		end
-		folder = File.join(Rails.root, "tmp", "uploads")
-		Dir.mkdir(folder) unless File.exists?(folder)
-		pdf.save "#{Rails.root}/tmp/uploads/combined.pdf"
-
+		#puts "params: #{params}"
+		#pdf = CombinePDF.new
+		#params['files'].each do |file|
+		#	pdf << CombinePDF.new(file.tempfile.path)
+		#end
+		#folder = File.join(Rails.root, "tmp", "uploads")
+		#Dir.mkdir(folder) unless File.exists?(folder)
+		#pdf.save "#{Rails.root}/tmp/uploads/combined.pdf"
+		puts params
+		save_pdf(params['files'])
 
 		# now we need to upload the new file to s3
 		s3 = Aws::S3::Client.new(
@@ -50,6 +51,19 @@ class UploadsController < AuthenticatedController
 		}
 		render json: data, status: 202
 
+
+
+	end
+	private
+
+	def save_pdf(files)
+		pdf = CombinePDF.new
+		files.each do |file|
+			pdf << CombinePDF.new(file.tempfile.path)
+		end
+		folder = File.join(Rails.root, "tmp", "uploads")
+		Dir.mkdir(folder) unless File.exists?(folder)
+		pdf.save "#{Rails.root}/tmp/uploads/combined.pdf"
 
 
 	end
