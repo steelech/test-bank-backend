@@ -49,7 +49,7 @@ class UploadsController < AuthenticatedController
 	
 		user = User.find_by(email: email)
 		puts "user: #{user.email}"
-		user.documents.create({name: name, course: course, s3_key: filename, s3_bucket: 'test-bank-assets'})
+		user.uploads.create({name: name, course: course, s3_key: filename, s3_bucket: 'test-bank-assets'})
 
 		data = {
 			name: name,
@@ -63,6 +63,11 @@ class UploadsController < AuthenticatedController
 
 
 	end
+	def index
+		@uploads = Upload.all
+		render json: @uploads, status: 202
+
+	end
 	private
 
 	def save_pdf(files)
@@ -73,7 +78,5 @@ class UploadsController < AuthenticatedController
 		folder = File.join(Rails.root, "tmp", "uploads")
 		Dir.mkdir(folder) unless File.exists?(folder)
 		pdf.save "#{Rails.root}/tmp/uploads/combined.pdf"
-
-
 	end
 end
