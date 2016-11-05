@@ -11,6 +11,7 @@ class CognitoController < ApplicationController
 			logins: {
 				"login.testbank" => "steelech@umich.edu"
 			},
+			token_duration: 120
 		})
 
 		data = {
