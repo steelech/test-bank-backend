@@ -1,5 +1,6 @@
 class CognitoController < ApplicationController
 	def show
+		puts "current_user: #{current_user}"
 		cogClient = Aws::CognitoIdentity::Client.new(
 			region: "us-west-2",
 			access_key_id: ENV["AWS_ACCESS_KEY_ID"],
