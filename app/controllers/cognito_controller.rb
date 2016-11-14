@@ -1,4 +1,4 @@
-class CognitoController < ApplicationController
+class CognitoController < AuthenticatedController 
 	def show
 		puts "current_user: #{current_user}"
 		cogClient = Aws::CognitoIdentity::Client.new(

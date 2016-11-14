@@ -2,6 +2,7 @@ class SessionsController < Devise::SessionsController
 	respond_to :html, :json
 
 	def create
+		# possibly get cognito credentials here 
 		super do |user|
 			if request.format.json?
 				data = {

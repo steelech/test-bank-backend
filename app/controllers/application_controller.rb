@@ -4,7 +4,6 @@ class ApplicationController < ActionController::API
 	def authenticate_user_from_token!
 		puts "authenticating user with token"
 		authenticate_with_http_token do |token, options|
-			puts "token: {token}"
 			user_email = options[:email].presence
 			user = user_email && User.find_by_email(user_email)
 
