@@ -1,6 +1,5 @@
 class CognitoController < AuthenticatedController 
 	def show
-		puts "current_user: #{current_user}"
 		cogClient = Aws::CognitoIdentity::Client.new(
 			region: "us-west-2",
 			access_key_id: ENV["AWS_ACCESS_KEY_ID"],
@@ -10,7 +9,7 @@ class CognitoController < AuthenticatedController
 		resp = cogClient.get_open_id_token_for_developer_identity({
 			identity_pool_id: 'us-west-2:10100c61-ea97-4255-ae90-be2c1a63ade0',
 			logins: {
-				"login.testbank" => "steelech@umich.edu"
+				"login.testbank" => current_user.email 
 			},
 			token_duration: 120
 		})
