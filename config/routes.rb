@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   post 'uploads', to: 'uploads#create'
   get 'uploads', to: 'uploads#index'
   get 'cognito', to: 'cognito#show'
+  post 'courses', to: 'courses#create'
+  get 'courses', to: 'courses#index'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
