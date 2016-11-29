@@ -1,6 +1,8 @@
 class CoursesController < AuthenticatedController
 	def index
 		# renders a list of all the courses
+		@courses = Course.all
+		render json: @courses, status: 200
 	end
 
 	def show
