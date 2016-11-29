@@ -64,7 +64,14 @@ class UploadsController < AuthenticatedController
 
 	end
 	def index
-		@uploads = Upload.all
+		puts "params: #{params[:name]}"
+		if params[:name]
+			puts "in the first block!!!"
+			@uploads = Upload.where("name = ?", "F15 midterm 1")
+		else
+			@uploads = Upload.all
+		end
+		puts @uploads
 		render json: @uploads, status: 202
 
 	end

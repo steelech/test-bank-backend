@@ -1,7 +1,11 @@
 class CoursesController < AuthenticatedController
 	def index
 		# renders a list of all the courses
-		@courses = Course.all
+		if params[:name]
+			@courses = Course.first
+		else
+			@courses = Course.all
+		end
 		render json: @courses, status: 200
 	end
 
