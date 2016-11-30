@@ -63,17 +63,31 @@ class UploadsController < AuthenticatedController
 
 
 	end
+
 	def index
 		render json: uploads_query(params), status: 202
-
 	end
+
 	private
+
 	def uploads_query(params)
 		if params[:course]
 			@course = Course.where(name: params[:course]).first
 			@uploads = @course.uploads
+		elsif params[:mine]
+			if params[:search]
+				puts "USER SEARCH"
+				@uploads = current_user.uploads.where("name LIKE (?)", "%#{params[:search]}%")
+			else
+				@uploads = current_user.uploads
+			end
 		else
-			@uploads = Upload.all
+			if params[:search]
+				puts "ALL SEARCH"
+				@uploads = Upload.where("name LIKE (?)", "%#{params[:search]}%")
+			else
+				@uploads = Upload.all
+			end
 		end
 
 		@uploads
