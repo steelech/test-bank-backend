@@ -64,18 +64,20 @@ class UploadsController < AuthenticatedController
 
 	end
 	def index
-		puts "params: #{params[:name]}"
-		if params[:name]
-			puts "in the first block!!!"
-			@uploads = Upload.where("name = ?", "F15 midterm 1")
-		else
-			@uploads = Upload.all
-		end
-		puts @uploads
-		render json: @uploads, status: 202
+		render json: uploads_query(params), status: 202
 
 	end
 	private
+	def uploads_query(params)
+		if params[:course]
+			@course = Course.where(name: params[:course]).first
+			@uploads = @course.uploads
+		else
+			@uploads = Upload.all
+		end
+
+		@uploads
+	end
 
 	def save_pdf(files)
 		pdf = CombinePDF.new
