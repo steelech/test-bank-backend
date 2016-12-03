@@ -2,6 +2,28 @@ require 'net/http'
 class UploadsController < AuthenticatedController
 	respond_to :json
 	def create
+
+		num_files = params["files"].to_i
+		puts "Number of files: #{num_files}"
+
+		if num_files == 0
+			name = params["data"]["attributes"]["name"]
+			course_name = params["data"]["attributes"]["course"]
+			course = Course.where(name: course_name).first
+			s3_key = params["data"]["attributes"]["s3-key"]
+		        @upload = Upload.create!({name: name, course: course, s3_key: s3_key})
+
+		else
+			puts "#{num_files} files!!!"
+		end
+		count = 0
+		while count < num_files.to_i
+			file = params["file-#{count}"]
+			puts "file: #{file}"
+			count = count + 1
+		end
+			
+
 		# combine the pdfs into one file and store in /tmp
 		#puts "params: #{params}"
 		#pdf = CombinePDF.new
@@ -40,25 +62,19 @@ class UploadsController < AuthenticatedController
 		#		"login.testbank" => "steelech@umich.edu"
 		#	},
 		#})
-		files = params['files']
-		email = params['email']
-		puts "email: #{email}"
-		name = params['name']
-		course = params['course']
-		filename = params['files'][0].original_filename
 	
-		user = User.find_by(email: email)
-		puts "user: #{user.email}"
-		user.uploads.create({name: name, course: course, s3_key: filename, s3_bucket: 'test-bank-assets'})
+		#user = User.find_by(email: email)
+		#puts "user: #{user.email}"
+		#user.uploads.create({name: name, course: course, s3_key: filename, s3_bucket: 'test-bank-assets'})
 
-		data = {
-			name: name,
-			course: course,
-			s3_key: filename,
-			s3_bucket: 'test-bank-assets'
+		#data = {
+			#name: name,
+			#course: course,
+			#s3_key: filename,
+			#s3_bucket: 'test-bank-assets'
 
-		}
-		render json: data, status: 202
+		#}
+		render json: {}, status: 202
 
 
 
@@ -87,6 +103,7 @@ class UploadsController < AuthenticatedController
 				@uploads = Upload.where("name LIKE (?)", "%#{params[:search]}%")
 			else
 				@uploads = Upload.all
+				puts "@uploads: #{@uploads}"
 			end
 		end
 
