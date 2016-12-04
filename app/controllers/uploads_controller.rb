@@ -13,6 +13,7 @@ class UploadsController < AuthenticatedController
 			course = Course.where(name: course_name).first
 			s3_key = params["data"]["attributes"]["s3-key"]
 		        @upload = Upload.create!({name: name, course: course, s3_key: s3_key, file_type: file_type})
+			current_user.uploads.push(@upload)
 		else
 			# TODO: handle multiple files, each with a name and course
 			name = params["name"]
@@ -29,6 +30,7 @@ class UploadsController < AuthenticatedController
 			s3Object.upload_file("#{Rails.root}/tmp/uploads/combined.pdf")
 			course = Course.where(name: course_name).first
 			@upload = Upload.create({name: name, course: course, s3_key: s3_key, file_type: file_type})
+			current_user.uploads.push(@upload)
 		end
 		render json: @upload, status: 202
 	end
