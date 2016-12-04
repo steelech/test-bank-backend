@@ -9,13 +9,15 @@ class UploadsController < AuthenticatedController
 		if num_files == 0
 			name = params["data"]["attributes"]["name"]
 			course_name = params["data"]["attributes"]["course"]
+			file_type = params["data"]["attributes"]["file-type"]
 			course = Course.where(name: course_name).first
 			s3_key = params["data"]["attributes"]["s3-key"]
-		        @upload = Upload.create!({name: name, course: course, s3_key: s3_key})
+		        @upload = Upload.create!({name: name, course: course, s3_key: s3_key, file_type: file_type})
 		else
 			# TODO: handle multiple files, each with a name and course
 			name = params["name"]
 			course_name = params["course"]
+			file_type = params["file_type"]
 			bucket = "test-bank-assets"
 			s3_key = name.downcase.gsub(/\s/, "") + course_name.downcase.gsub(/\s/, "")
 			save_pdf(files)
@@ -26,9 +28,9 @@ class UploadsController < AuthenticatedController
 			s3Object = Aws::S3::Object.new(bucket, s3_key, client: s3)
 			s3Object.upload_file("#{Rails.root}/tmp/uploads/combined.pdf")
 			course = Course.where(name: course_name).first
-			@upload = Upload.create({name: name, course: course, s3_key: s3_key})
-			render json: @upload, status: 202
+			@upload = Upload.create({name: name, course: course, s3_key: s3_key, file_type: file_type})
 		end
+		render json: @upload, status: 202
 	end
 
 	def index
@@ -39,7 +41,6 @@ class UploadsController < AuthenticatedController
 
 	def save_file_record(params)
 		Upload.create!({name: params.name})
-
 	end
 
 	def combine_files(params) 
@@ -65,7 +66,6 @@ class UploadsController < AuthenticatedController
 				puts "@uploads: #{@uploads}"
 			end
 		end
-
 		@uploads
 	end
 
